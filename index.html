@@ -10,8 +10,6 @@
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif}
         body{background:#0a0a0f;min-height:100vh;position:relative;overflow-x:hidden}
         body::before{content:"";position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 30% 30%,rgba(255,0,0,0.15) 0%,transparent 40%),radial-gradient(circle at 70% 70%,rgba(0,100,255,0.1) 0%,transparent 40%);pointer-events:none;z-index:0}
-        
-        /* Side Menu */
         .side-menu-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:999;opacity:0;visibility:hidden;transition:all 0.3s}
         .side-menu-overlay.active{opacity:1;visibility:visible}
         .side-menu{position:fixed;top:0;left:-300px;width:280px;height:100%;background:linear-gradient(180deg,#0d1117 0%,#161b22 100%);z-index:1000;transition:left 0.4s;box-shadow:10px 0 40px rgba(0,0,0,0.5);border-right:1px solid rgba(255,0,0,0.2);overflow-y:auto;padding:24px 0}
@@ -27,8 +25,8 @@
         .menu-item{display:flex;align-items:center;gap:14px;padding:14px 16px;color:#d1d5db;font-weight:500;font-size:15px;border-radius:14px;cursor:pointer;margin-bottom:6px;transition:0.2s}
         .menu-item i{width:24px;color:#FF0000;font-size:18px}
         .menu-item:hover{background:rgba(255,0,0,0.1);color:#fff}
-        .social-join-btn{display:flex;align-items:center;gap:12px;padding:16px;border-radius:16px;margin-bottom:12px;text-decoration:none;transition:0.3s}
-        .whatsapp-join{background:linear-gradient(135deg,#075e54,#128c7e)}
+        .social-join-btn{display:flex;align-items:center;gap:12px;padding:16px;border-radius:16px;margin-bottom:12px;text-decoration:none;transition:0.3s;border:1px solid transparent}
+        .whatsapp-join{background:linear-gradient(135deg,#075e54,#128c7e);border-color:#25d366}
         .telegram-join{background:linear-gradient(135deg,#1c92d2,#0088cc)}
         .social-join-btn i{font-size:28px;color:#fff}
         .social-join-btn div{flex:1}
@@ -36,7 +34,6 @@
         .social-join-btn p{color:rgba(255,255,255,0.8);font-size:12px}
         .social-join-btn .arrow{color:#fff;font-size:20px}
         .social-join-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
-        
         .main-content{position:relative;z-index:10;min-height:100vh;padding:20px 16px 40px;display:flex;flex-direction:column}
         .top-bar{display:flex;align-items:center;justify-content:space-between;max-width:1000px;margin:0 auto 20px;width:100%;padding:16px 0}
         .menu-toggle{background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);width:50px;height:50px;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;transition:0.2s}
@@ -187,7 +184,6 @@
 
 <script>
 (function(){
-    // Side Menu
     const menuToggle=document.getElementById('menuToggleBtn'),closeMenu=document.getElementById('closeMenuBtn');
     const sideMenu=document.getElementById('sideMenu'),overlay=document.getElementById('sideMenuOverlay');
     menuToggle.addEventListener('click',()=>{sideMenu.classList.add('active');overlay.classList.add('active');document.body.style.overflow='hidden';});
@@ -258,14 +254,14 @@
 
     downloadBtn.addEventListener('click',function(){
         if(!selectedQuality)return;
-        
         const title = (videoData?.title || 'video').replace(/[^\w\s]/gi, '').substring(0,40).trim()||'video';
         const quality = selectedQuality.resolution || (selectedQuality.type==='audio'?'audio':'video');
         const ext = selectedQuality.type==='audio'?'mp3':'mp4';
         const filename = `${title}_${quality}.${ext}`;
         
-        // ✅ download.html پیج پر ری ڈائریکٹ کریں — وہاں Blob Download ہوگا
-        window.location.href = `download.html?url=${encodeURIComponent(selectedQuality.download_url)}&filename=${encodeURIComponent(filename)}`;
+        // ✅ مستقل حل: Google CDN کے &title= پیرامیٹر کے ساتھ download.html پر بھیجیں
+        const downloadUrl = selectedQuality.download_url + '&title=' + encodeURIComponent(filename);
+        window.location.href = `download.html?url=${encodeURIComponent(downloadUrl)}&filename=${encodeURIComponent(filename)}`;
     });
     
     fetchBtn.addEventListener('click', fetchVideo);
